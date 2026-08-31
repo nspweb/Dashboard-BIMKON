@@ -26,21 +26,21 @@ st.set_page_config(
 with st.sidebar:
     st.markdown("### ⚙️ Koneksi")
 
-    if "gemini_api_key_input" not in st.session_state:
-        st.session_state["gemini_api_key_input"] = ""
+    if "groq_api_key_input" not in st.session_state:
+        st.session_state["groq_api_key_input"] = ""
 
-    if "gemini_api_key" not in st.secrets:
-        st.session_state["gemini_api_key_input"] = st.text_input(
-            "Gemini API Key (gratis, untuk fitur AI)",
+    if "groq_api_key" not in st.secrets:
+        st.session_state["groq_api_key_input"] = st.text_input(
+            "Groq API Key (gratis, untuk fitur AI)",
             type="password",
-            value=st.session_state["gemini_api_key_input"],
-            help="Ambil gratis di aistudio.google.com/apikey (tanpa kartu kredit). "
+            value=st.session_state["groq_api_key_input"],
+            help="Ambil gratis di console.groq.com/keys (tanpa kartu kredit). "
             "Hanya disimpan di memori sesi browser ini, tidak ditulis ke disk. "
             "Untuk deployment permanen, isi lewat Streamlit Secrets sebagai "
-            "gemini_api_key.",
+            "groq_api_key.",
         )
     else:
-        st.success("Gemini API key: terhubung lewat Secrets ✅")
+        st.success("Groq API key: terhubung lewat Secrets ✅")
 
     if st.button("🔄 Refresh data dari Google Sheets", use_container_width=True):
         sc.refresh_data()
@@ -271,7 +271,7 @@ with tabs[-1]:
 
     if st.button("🤖 Proses dengan AI", type="primary", disabled=not raw_notes.strip() or not objek_name.strip()):
         try:
-            with st.spinner("Menganalisis catatan dengan Gemini..."):
+            with st.spinner("Menganalisis catatan dengan AI (Groq/Llama)..."):
                 hasil = ai_extract.extract_findings(
                     raw_notes=raw_notes,
                     objek_name=objek_name,

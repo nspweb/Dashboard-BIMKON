@@ -1,3 +1,8 @@
+"""
+Modul untuk mengubah catatan lapangan mentah (tidak terstruktur) menjadi
+baris-baris temuan terstruktur, memakai Groq API (gratis, tanpa kartu kredit,
+model Llama, approval instan lewat console.groq.com).
+"""
 from __future__ import annotations
 
 import json

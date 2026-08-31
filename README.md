@@ -2,23 +2,28 @@
 
 Aplikasi Streamlit yang membaca & menulis data **langsung dari Google Sheets**
 lewat Google Sheets API (tidak ada data yang disimpan permanen di lokal/server),
-dilengkapi fitur input temuan baru berbasis AI memakai **Google Gemini API**
-(gratis, tanpa kartu kredit).
+dilengkapi fitur input temuan baru berbasis AI memakai **Groq API** (gratis,
+tanpa kartu kredit, model Llama 3.3).
 
 ## Fitur
 
 - **Dashboard** — KPI, grafik prioritas, jenis temuan, dan rekap per objek, dihitung live dari data sheet.
 - **Tab per objek kunjungan** — detail semua temuan, otomatis muncul untuk setiap tab baru di spreadsheet.
-- **➕ Input Temuan Baru (AI)** — paste catatan lapangan mentah, AI (Gemini) otomatis mengklasifikasikannya
+- **➕ Input Temuan Baru (AI)** — paste catatan lapangan mentah, AI (Llama via Groq) otomatis mengklasifikasikannya
   jadi baris-baris terstruktur (Aspek, Jenis Temuan, Kondisi, Permasalahan, Dampak, Rekomendasi, Prioritas),
   bisa direview/diedit, lalu disimpan langsung ke Google Sheets.
 
-## Kenapa Gemini (dan bukan yang berbayar)?
+## Kenapa Groq (dan bukan yang berbayar)?
 
-Google AI Studio menyediakan API key **gratis tanpa kartu kredit** dengan kuota harian yang
-lebih dari cukup untuk pemakaian seperti ini (beberapa kali proses per hari saat kunjungan
-industri baru). Model yang dipakai (`gemini-flash-latest`) otomatis mengikuti versi Flash
-terbaru yang stabil dari Google, jadi tidak perlu update kode setiap ada rilis model baru.
+Groq menyediakan API key **gratis tanpa kartu kredit**, approval-nya instan (tinggal daftar akun),
+dan menjalankan model open-source Llama di hardware khusus (LPU) yang sangat cepat. Untuk pemakaian
+seperti ini (beberapa kali proses per hari saat kunjungan industri baru), kuota gratisnya jauh lebih
+dari cukup.
+
+> Catatan: sempat dicoba pakai Google Gemini API, tapi banyak project baru kena flag/ditolak akses
+> ("PERMISSION_DENIED") oleh sistem Google secara otomatis tanpa alasan jelas — masalah yang cukup
+> sering dilaporkan developer lain dan butuh proses review manual dari tim Google. Groq tidak
+> mengalami masalah serupa dan approval-nya langsung jadi.
 
 ## 1. Setup Google Sheets API (wajib, untuk baca & tulis data)
 
@@ -32,15 +37,14 @@ terbaru yang stabil dari Google, jadi tidak perlu update kode setiap ada rilis m
 6. Salin isi file JSON tadi ke `.streamlit/secrets.toml` pada bagian `[gcp_service_account]`
    (lihat `.streamlit/secrets.toml.example`).
 
-## 2. Setup Gemini API Key (gratis, untuk fitur AI)
+## 2. Setup Groq API Key (gratis, untuk fitur AI)
 
-1. Buka [aistudio.google.com/apikey](https://aistudio.google.com/apikey), login dengan akun Google,
-   klik **"Create API key"**. Tidak perlu kartu kredit / tidak ada tagihan selama pakai kuota gratis.
-2. Isi ke `secrets.toml` sebagai `gemini_api_key = "AIza..."`, **atau** biarkan kosong dan
+1. Buka [console.groq.com/keys](https://console.groq.com/keys), daftar/login (bisa pakai akun Google),
+   klik **"Create API Key"**. Tidak perlu kartu kredit, langsung aktif tanpa proses review.
+2. Isi ke `secrets.toml` sebagai `groq_api_key = "gsk_..."`, **atau** biarkan kosong dan
    masukkan manual lewat kolom di sidebar tiap kali membuka aplikasi (tidak disimpan ke disk).
-3. Kuota gratis (per Agustus 2026) untuk model Flash biasanya ada di kisaran ratusan hingga
-   ribuan request/hari — jauh lebih dari cukup untuk pemakaian internal seperti ini. Kalau suatu
-   saat kena limit, tunggu reset harian atau cek kuota terbaru di halaman rate limits Google AI.
+3. Kuota gratis (per Agustus 2026) untuk model Llama 3.3 70B biasanya di kisaran ribuan
+   request/hari — jauh lebih dari cukup untuk pemakaian internal seperti ini.
 
 ## 3. Jalankan secara lokal
 
@@ -57,7 +61,7 @@ streamlit run app.py
 1. Push folder ini (**tanpa** `secrets.toml` yang sudah terisi — hanya file `.example`) ke repo GitHub.
 2. Buka [share.streamlit.io](https://share.streamlit.io/) → "New app" → pilih repo & `app.py`.
 3. Di menu **Settings → Secrets** pada dashboard Streamlit Cloud, paste isi `secrets.toml` yang sudah
-   Anda isi lengkap (spreadsheet_id, gemini_api_key, dan blok `[gcp_service_account]`).
+   Anda isi lengkap (spreadsheet_id, groq_api_key, dan blok `[gcp_service_account]`).
 4. Deploy. Aplikasi akan langsung membaca data live dari spreadsheet Anda.
 
 ## Struktur data yang diharapkan di spreadsheet
