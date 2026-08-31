@@ -1,8 +1,3 @@
-"""
-Modul untuk mengubah catatan lapangan mentah (tidak terstruktur) menjadi
-baris-baris temuan terstruktur, memakai Groq API (gratis, tanpa kartu kredit,
-model Llama, approval instan lewat console.groq.com).
-"""
 from __future__ import annotations
 
 import json
@@ -14,7 +9,7 @@ from groq import Groq
 
 from config import JENIS_TEMUAN_OPTIONS, PRIORITAS_OPTIONS
 
-MODEL = "llama-3.3-70b-versatile"
+MODEL = "openai/gpt-oss-120b"
 
 SYSTEM_PROMPT = f"""Anda adalah asisten analis untuk program Bimbingan Konsultansi (BimKon)
 Peningkatan Produktivitas di Industri, yang dijalankan oleh BPVP.
