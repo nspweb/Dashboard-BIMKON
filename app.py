@@ -220,24 +220,18 @@ with tabs[-1]:
         "tabel yang sudah ada, lalu Anda bisa review/edit sebelum disimpan ke Google Sheets."
     )
 
-    colA, colB = st.columns([2, 1])
-    with colA:
-        pilihan_objek = ["(Objek baru)"] + object_names
-        pilih = st.selectbox("Objek kunjungan", pilihan_objek)
-        if pilih == "(Objek baru)":
-            objek_name = st.text_input("Nama objek kunjungan baru", "")
-            konteks = st.text_input(
-                "Konteks / jenis industri (opsional, jadi subjudul sheet baru)",
-                "",
-                placeholder="mis. Jasa Kecantikan & Perawatan (Salon) — BPVP Kendari",
-            )
-        else:
-            objek_name = pilih
-            konteks = ""
-
-    with colB:
-        st.markdown("&nbsp;")
-        st.info(f"Aspek yang sudah ada:\n\n" + ("\n".join(f"- {a}" for a in sorted(df['ASPEK'].dropna().unique())) if not df.empty else "belum ada"))
+    pilihan_objek = ["(Objek baru)"] + object_names
+    pilih = st.selectbox("Objek kunjungan", pilihan_objek)
+    if pilih == "(Objek baru)":
+        objek_name = st.text_input("Nama objek kunjungan baru", "")
+        konteks = st.text_input(
+            "Konteks / jenis industri (opsional, jadi subjudul sheet baru)",
+            "",
+            placeholder="mis. Jasa Kecantikan & Perawatan (Salon) — BPVP Kendari",
+        )
+    else:
+        objek_name = pilih
+        konteks = ""
 
     raw_notes = st.text_area(
         "Catatan lapangan mentah",
