@@ -23,33 +23,13 @@ st.set_page_config(
 # ----------------------------------------------------------------------------
 # Sidebar: koneksi & kontrol global
 # ----------------------------------------------------------------------------
+if "groq_api_key_input" not in st.session_state:
+    st.session_state["groq_api_key_input"] = ""
+
 with st.sidebar:
-    st.markdown("### ⚙️ Koneksi")
-
-    if "groq_api_key_input" not in st.session_state:
-        st.session_state["groq_api_key_input"] = ""
-
-    if "groq_api_key" not in st.secrets:
-        st.session_state["groq_api_key_input"] = st.text_input(
-            "Groq API Key (gratis, untuk fitur AI)",
-            type="password",
-            value=st.session_state["groq_api_key_input"],
-            help="Ambil gratis di console.groq.com/keys (tanpa kartu kredit). "
-            "Hanya disimpan di memori sesi browser ini, tidak ditulis ke disk. "
-            "Untuk deployment permanen, isi lewat Streamlit Secrets sebagai "
-            "groq_api_key.",
-        )
-    else:
-        st.success("Groq API key: terhubung lewat Secrets ✅")
-
     if st.button("🔄 Refresh data dari Google Sheets", use_container_width=True):
         sc.refresh_data()
         st.rerun()
-
-    st.caption(
-        "Data dashboard ini dibaca langsung dari Google Sheets lewat Google Sheets API "
-        "setiap beberapa menit (cache 5 menit), tidak disimpan permanen di server."
-    )
 
 # ----------------------------------------------------------------------------
 # Load data
@@ -59,10 +39,6 @@ try:
 except sc.SheetsError as e:
     st.error(str(e))
     st.stop()
-
-with st.sidebar:
-    st.caption(f"🕒 Data terakhir diambil: {loaded_at.strftime('%H:%M:%S')}")
-    st.caption(f"📁 {len(object_names)} objek kunjungan terdeteksi")
 
 st.title("📋 Dashboard Pemetaan Permasalahan BIMKON")
 st.caption(
